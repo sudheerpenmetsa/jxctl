@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="jxctl",
-    version="0.0.1",
+    version="0.0.2",
     author="Deepankumar",
     author_email="deepan0433@gmail.com",
     description="A Command line interface for Jenkins",
@@ -28,7 +28,7 @@ setuptools.setup(
     ],
     entry_points={
           'console_scripts': [
-              'jxctl = jxctl:init'
+              'jxctl = jxctl.jxctl:start'
           ]
     },
 )

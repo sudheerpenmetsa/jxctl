@@ -3,11 +3,15 @@ import sys
 import click
 import yaml
 
-sys.path.append("..")
+#sys.path.append("..")
 
 from pyfiglet import Figlet 
-from jxcore import pyjenkins
-from ctlcore import ctlCore
+try:
+    from jxcore import pyjenkins
+    from ctlcore import ctlCore
+except ImportError:
+    from .jxcore import pyjenkins
+    from .ctlcore import ctlCore
 
 __author__="Deepan"
 
@@ -19,13 +23,15 @@ def main():
     pass
 
 @main.command()
-def info():
+def version():
     """
-    Show the infomation about your Jenkins Context
+    Show the version of jxctl
     """
     f = Figlet(font='smslant')    
     click.echo(f.renderText('jxctl'))
-    pyjenkins().info()
+    click.echo('A Command line interface for Jenkins')
+    click.echo('jxctl - 0.0.1')
+    click.echo('python')
 
 @main.group()
 def context():
@@ -35,11 +41,11 @@ def context():
 def get():
     pass
 
-#pujxctl - context group
+#jxctl - context group
 @context.command()
 @click.option('--url', type=str)
 @click.option('--user', type=str)
-@click.option('--token', type=str, nargs=1)
+@click.option('--token', '--password', type=str, nargs=1)
 @click.option('--name', type=str)
 def set(url, user, token, name):
     """
@@ -52,10 +58,19 @@ def set(url, user, token, name):
 def show():
     ctlCore().show_current_context()
 
-#pujxctl - get group
+@context.command()
+def info():
+    """
+    Show the infomation about your Jenkins Context
+    """
+    f = Figlet(font='smslant')    
+    click.echo(f.renderText('jxctl'))
+    pyjenkins().info()
+
+#jxctl - get group
 
 @get.command()
-@click.option('--count', is_flag=True)
+@click.option('--count', '-c', is_flag=True)
 @click.option('--all', is_flag=True)
 @click.option('--maven', is_flag=True)
 @click.option('--freestyle', is_flag=True)
@@ -95,7 +110,7 @@ def jobs(count, all, maven, freestyle, pipeline, matrix, folders, org):
         pass
 
 @get.command()
-@click.option('--count', is_flag=True)
+@click.option('--count', '-c', is_flag=True)
 def plugins(count):
     """
     List all installed plugins of your Jenkins Context
@@ -121,10 +136,11 @@ def init():
     if not os.path.isfile(config_file):
         with open(config_file, 'w') as yaml_file:
             yaml.dump(yaml.load(default_config_file), yaml_file, default_flow_style=False)
-    
-    #Calling jxctl main
-    main()
 
 if __name__ == '__main__':
+    init()
+    main()
+
+def start():
     init()
     main()
