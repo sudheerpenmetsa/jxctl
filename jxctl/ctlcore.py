@@ -17,7 +17,10 @@ class ctlCore:
         #print(self.cName, self.cToken, self.cURL, self.cUser)
 
     def validate_context(self):
-        return True
+        if self.cURL is not None and self.cToken is not None and self.cUser is not None:
+            return True
+        else:
+            return False
 
     def set_context(self, url, user, token, name):
         if user is not None:
@@ -38,11 +41,10 @@ class ctlCore:
                 token: %s
                 name: %s
             """ % (self.cName, self.cURL, self.cUser, self.cToken, self.cName)
-        print(yaml.dump(yaml.load(context_file), default_flow_style=False))
+        #print(yaml.dump(yaml.load(context_file), default_flow_style=False))
 
         with open(self.CONTEXT_FILE, 'w') as cFile:
             yaml.dump(yaml.load(context_file), cFile, default_flow_style=False)
 
-    def show_current_context(self):
-        print("Jenkins Running on : " + self.cURL)
+        print("jxctl - context updated")
         

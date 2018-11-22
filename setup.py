@@ -1,13 +1,14 @@
 import setuptools
+from jxctl.jxctl import __author__, __email__, __version__
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="jxctl",
-    version="0.0.2",
-    author="Deepankumar",
-    author_email="deepan0433@gmail.com",
+    version=__version__,
+    author=__author__,
+    author_email=__email__,
     description="A Command line interface for Jenkins",
     long_description=long_description,
     long_description_content_type="text/markdown",

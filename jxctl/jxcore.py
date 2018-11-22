@@ -20,17 +20,18 @@ class pyjenkins:
     version = ''
 
     option_dist = {
-        "freestyle" : ["hudson.model.FreeStyleProject"], 
-        "maven" : ["hudson.maven.MavenModuleSet"], 
-        "pipeline" : ["org.jenkinsci.plugins.workflow.job.WorkflowJob", "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject"],
-        "folders" : ["com.cloudbees.hudson.plugins.folder.Folder"],
-        "matrix" : ["hudson.matrix.MatrixProject"],
-        "org" : ["jenkins.branch.OrganizationFolder"]
+        "freestyle" : "hudson.model.FreeStyleProject", 
+        "maven" : "hudson.maven.MavenModuleSet", 
+        "pipeline" : "org.jenkinsci.plugins.workflow.job.WorkflowJob",
+        "multi-branch" : "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject",
+        "folders" : "com.cloudbees.hudson.plugins.folder.Folder",
+        "matrix" : "hudson.matrix.MatrixProject",
+        "org" : "jenkins.branch.OrganizationFolder"
     }
     non_jobs_list = [ 
-	"com.cloudbees.hudson.plugins.folder.Folder",
-	"com.cloudbees.hudson.plugins.modeling.impl.builder.BuilderTemplate",
-	"com.cloudbees.hudson.plugins.modeling.impl.jobTemplate.JobTemplate"
+        "com.cloudbees.hudson.plugins.folder.Folder",
+        "com.cloudbees.hudson.plugins.modeling.impl.builder.BuilderTemplate",
+        "com.cloudbees.hudson.plugins.modeling.impl.jobTemplate.JobTemplate"
 	]
 
     def __init__(self):
@@ -61,36 +62,13 @@ class pyjenkins:
                 jobs_list.append([job_item["name"], job_item["url"]])
         print(tabulate(jobs_list, headers=['Name', 'URL'], tablefmt='orgtbl'))     
 
-    def list_jobs(self, option):
+    def list_jobs(self, option_list):
         jobs = self.server.get_all_jobs(folder_depth=None, folder_depth_per_request=50)
-        jobs_list = []
-        if option == "freestlye":
+        jobs_list = []        
+        for option_item in option_list:
+            option_class = str(self.option_dist[option_item])
             for item in jobs:
-                if(item["_class"] == "hudson.model.FreeStyleProject"):
-                    jobs_list.append([item["name"], item["url"]])        
-        elif option == "maven":
-            for item in jobs:
-                if(item["_class"] == "hudson.maven.MavenModuleSet"):
-                    jobs_list.append([item["name"], item["url"]])
-        elif option == "pipeline":
-            for item in jobs:
-                if(item["_class"] == "org.jenkinsci.plugins.workflow.job.WorkflowJob" or item["_class"] == "org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject"):
-                    jobs_list.append([item["name"], item["url"]])
-        elif option == "matrix":
-            for item in jobs:
-                if(item["_class"] == "hudson.matrix.MatrixProject"):
-                    jobs_list.append([item["name"], item["url"]])
-        elif option == "matrix":
-            for item in jobs:
-                if(item["_class"] == "hudson.matrix.MatrixProject"):
-                    jobs_list.append([item["name"], item["url"]])
-        elif option == "org":
-            for item in jobs:
-                if(item["_class"] == "jenkins.branch.OrganizationFolder"):
-                    jobs_list.append([item["name"], item["url"]])
-        elif option == "folders":
-            for item in jobs:
-                if(item["_class"] == "com.cloudbees.hudson.plugins.folder.Folder"):
+                if(item["_class"] == option_class):
                     jobs_list.append([item["name"], item["url"]])
         print(tabulate(jobs_list, headers=['Name', 'URL'], tablefmt='orgtbl')) 
     
